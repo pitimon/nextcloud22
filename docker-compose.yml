@@ -1,5 +1,26 @@
 version: "3"
 services:
+  db:
+    image: mariadb
+#    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    networks:
+      - backend
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_PASSWORD=
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+  redis:
+    image: redis:latest
+#    restart: always
+    networks:
+      - frontend
+    volumes:
+      - redis:/var/lib/redis
+
   app:
     image: nextcloud
     volumes:
@@ -20,6 +41,9 @@ services:
       - backend
       - webproxy
     links:
+      - db
+      - redis
+    depends_on:
       - db
       - redis
     deploy:
@@ -46,26 +70,6 @@ services:
         - traefik.http.middlewares.nextcloud.headers.stsPreload=true
         - traefik.http.middlewares.nextcloud_redirect.redirectregex.regex=/.well-known/(card|cal)dav
         - traefik.http.middlewares.nextcloud_redirect.redirectregex.replacement=/remote.php/dav/
-  db:
-    image: mariadb
-#    restart: always
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
-    networks:
-      - backend
-    volumes:
-      - db:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=
-      - MYSQL_PASSWORD=
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-  redis:
-    image: redis:latest
-#    restart: always
-    networks:
-      - frontend
-    volumes:
-      - redis:/var/lib/redis
 
 volumes:
   redis:
