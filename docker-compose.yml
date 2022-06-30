@@ -29,5 +29,4 @@ volumes:
       type: nfs
 
 networks:
-  backend:
   frontend:
