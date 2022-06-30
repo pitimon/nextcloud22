@@ -1,7 +1,7 @@
 version: "3"
 services:
   app:
-    image: nextcloud
+    image: nextcloud:production-fpm
     volumes:
       - nextcloud:/var/www/html
     environment:
@@ -9,11 +9,12 @@ services:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
+      - NEXTCLOUD_TRUSTED_DOMAINS=nextcloud.xops.ipv9.me
       - NEXTCLOUD_ADMIN_USER=admin
-      - NEXTCLOUD_ADMIN_PASSWORD=neXtClouD2k22
+      - NEXTCLOUD_ADMIN_PASSWORD=${}
       - REDIS_HOST=redis
-    ports:
-      - 80
+#    ports:
+#      - 80
     networks:
       - frontend
       - backend
