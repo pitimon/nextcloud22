@@ -14,6 +14,8 @@ services:
     networks:
       - frontend
       - backend
+    links:
+      - db
     deploy:
       replicas: 1
 #    placement:
