@@ -4,10 +4,16 @@ services:
     image: nextcloud
     volumes:
       - nextcloud:/var/www/html
+    environment:
+      - MYSQL_PASSWORD=nextCloud22
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
     ports:
       - 80
     networks:
       - frontend
+      - backend
     deploy:
       replicas: 1
 #    placement:
@@ -20,6 +26,19 @@ services:
         limits:
           cpus: "2.0"
           memory: 2G
+  db:
+    image: mariadb
+#    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    networks:
+      - backend
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=nextCloud22
+      - MYSQL_PASSWORD=nextcloud22
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
 volumes:
   nextcloud:
     driver: local
@@ -27,6 +46,13 @@ volumes:
       device: ':/mnt/tank/swarm/itarun/nextcloudme'
       o: 'addr=truenas.ipv9.xyz,rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14,nfsvers=4'
       type: nfs
+  db:
+    driver: local
+    driver_opts:
+      device: ':/mnt/tank/swarm/itarun/nextclouddb'
+      o: 'addr=truenas.ipv9.xyz,rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14,nfsvers=4'
+      type: nfs  
 
 networks:
   frontend:
+  backend:
