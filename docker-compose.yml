@@ -17,14 +17,12 @@ services:
     networks:
       - frontend
       - backend
+      - webproxy
     links:
       - db
       - redis
     deploy:
       replicas: 1
-#    placement:
-#      constraints:
-#       - node.labels.uptime == true
       resources:
         reservations:
           cpus: '0.2'
@@ -32,6 +30,21 @@ services:
         limits:
           cpus: "4.0"
           memory: 6G
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=webproxy
+#        - traefik.http.routers.nextcloud.middlewares=nextcloud,nextcloud_redirect
+        - traefik.http.routers.nextcloud.tls.certresolver=default
+        - traefik.http.routers.nextcloud.rule=Host(`nextcloud.xops.ipv9.me`)
+        - traefik.http.routers.nextcloud.entrypoints=websecure
+        - traefik.http.services.nextcloud.loadbalancer.server.port=80
+#      - traefik.http.middlewares.nextcloud.headers.customFrameOptionsValue=ALLOW-FROM https://mydomain.com
+#      - traefik.http.middlewares.nextcloud.headers.contentSecurityPolicy=frame-ancestors 'self' mydomain.com *.mydomain.net
+#      - traefik.http.middlewares.nextcloud.headers.stsSeconds=155520011
+#      - traefik.http.middlewares.nextcloud.headers.stsIncludeSubdomains=true
+#      - traefik.http.middlewares.nextcloud.headers.stsPreload=true
+#      - traefik.http.middlewares.nextcloud_redirect.redirectregex.regex=/.well-known/(card|cal)dav
+#      - traefik.http.middlewares.nextcloud_redirect.redirectregex.replacement=/remote.php/dav/
   db:
     image: mariadb
 #    restart: always
@@ -71,3 +84,5 @@ volumes:
 networks:
   frontend:
   backend:
+  webproxy:
+    external: true
