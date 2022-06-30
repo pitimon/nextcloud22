@@ -13,8 +13,8 @@ services:
       - NEXTCLOUD_ADMIN_USER=admin
       - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASS}
       - REDIS_HOST=redis
-#    ports:
-#      - 80
+    ports:
+      - 80
     networks:
       - frontend
       - backend
