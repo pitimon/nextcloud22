@@ -26,11 +26,11 @@ services:
       replicas: 1
       resources:
         reservations:
-          cpus: '0.2'
-          memory: 32M
+          cpus: '0.4'
+          memory: 512M
         limits:
-          cpus: "4.0"
-          memory: 6G
+          cpus: "6.0"
+          memory: 8G
       labels:
         - traefik.enable=true
         - traefik.docker.network=webproxy
