@@ -33,7 +33,7 @@ services:
       labels:
         - traefik.enable=true
         - traefik.docker.network=webproxy
-        - traefik.http.routers.nextcloud.middlewares=nextcloud,nextcloud_redirect
+#        - traefik.http.routers.nextcloud.middlewares=nextcloud,nextcloud_redirect
         - traefik.http.routers.nextcloud.tls.certresolver=default
         - traefik.http.routers.nextcloud.rule=Host(`nextcloud.xops.ipv9.me`)
         - traefik.http.routers.nextcloud.entrypoints=websecure
